@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>Stree Maps</title>
+    <!-- 导入地图样式 -->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <link rel="stylesheet" href="CSS/style.css"/>
+</head>
+<body>
+<!-- 布局界面 -->
+<div class="container">
+    <div class="options-box">
+        <h1>找到你心仪的景区</h1>
+        <div>
+            <input id="show-listings" type="button" value="Show Listings">
+            <input id="hide-listings" type="button" value="Hide Listings">
+        </div>
+        <hr>
+        <div>
+            <input id="zoom-to-area-text" type="text" placeholder="请输入关键字">
+            <!--<input id="zoom-to-area-text" type="text" placeholder="请输入关键字">-->
+            <input id="zoom-to-area" type="button" value="搜索">
+        </div>
+        <hr>
+        <div>
+            <span class="text"> 出行方式 </span>
+            <p>
+                Your country:
+                <select data-bind="options: availableCountries,
+                       optionsText: 'countryName',
+                       value: selectedCountry,
+                       optionsCaption: 'Choose...'"></select>
+            </p>
+
+            <!--knockout 测试用-->
+            <!--<select id="mode2" data-bind="options: ways,value:selected" ></select>-->
+
+            <select id="mode">
+                <option data-bind="value:Driving">自驾</option>
+                <option value="Walking">步行</option>
+                <option value="Riding">骑行</option>
+                <option value="Transfer">公交</option>
+            </select>
+            <br>
+            <span class="text">From</span>
+            <input id="origin" type="text" placeholder="起点">
+            <br>
+            &nbsp&nbsp&nbsp&nbsp&nbsp<span class="text">to</span>
+            <input id="destination" type="text" placeholder="目的地">
+            <input id="search" type="button" value="Go">
+        </div>
+    </div>
+    <div id="panel"></div>
+    <!-- 选定地图的div容器 -->
+    <div id="map">
+
+    </div>
+</div>
+</body>
+<script type='text/javascript' src="JS/knockout-3.4.2.js"></script>
+<script src="http://webapi.amap.com/maps?v=1.4.4&key=a6c0816388386f78eb0621e836d9409b&callback=init"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- 异步加载 JavaScript API。-->
+
+<!--<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>-->
+<script src="JS/main.js"></script>
+</html>
