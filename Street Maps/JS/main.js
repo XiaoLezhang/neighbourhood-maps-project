@@ -1,9 +1,4 @@
-// var viewModel = function () {
-//     // These are the initial options
-//     this.ways = ko.observableArray(['France', 'Germany', 'Spain']),
-// }
-//
-// ko.applyBindings(new viewModel());
+
 
 var map;
 var markers = [];
@@ -11,6 +6,14 @@ var markers = [];
 var defaultIcon = 'http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png';
 var highlightedIcon = 'http://webapi.amap.com/theme/v1.3/markers/n/mark_r.png';
 
+// 创建标记集合
+var locations = [
+    {title: '中山纪念堂', position: [113.264672, 23.132868]},
+    {title: '北京路', position: [113.268904, 23.124397]},
+    {title: '西门口', position: [113.244261, 23.125981]},
+    {title: '荔枝湾', position: [113.238155, 23.121639]},
+    {title: '越秀山', position: [113.268062, 23.140349]}
+];
 
 
 function init() {
@@ -47,14 +50,7 @@ function init() {
         //TODO: 使用autocomplete对象调用相关功能
     });
 
-    // 创建标记集合
-    var locations = [
-        {title: '中山纪念堂', position: [113.264672, 23.132868]},
-        {title: '北京路', position: [113.268904, 23.124397]},
-        {title: '西门口', position: [113.244261, 23.125981]},
-        {title: '荔枝湾', position: [113.238155, 23.121639]},
-        {title: '越秀山', position: [113.268062, 23.140349]}
-    ];
+
 
     // 创建 默认信息窗体
     var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
@@ -66,9 +62,7 @@ function init() {
     })
 
 
-
-
-    // 添加标记并绑定标记事件
+// 添加标记并绑定标记事件
     for (var i = 0; i < locations.length; i++) {
         var position = locations[i].position;
         var title = locations[i].title;
@@ -84,54 +78,7 @@ function init() {
 
         markers.push(marker);
         markers[i].setMap(null);
-        //调用foursquareAPI
-        // var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ lat + ',' + log + '&client_id=I35M5ZXXFUZTAMVQPV0BRTAC4O3PJ3NDVV4BHNID5Q2NDTLL' + '&client_secret=LTUSTS3QA4ZGOSJGG0M35FIXK4LYXTGLL2UYAXWGEZC50RUT' + '&v=20180325' + '&query=' + title + '&m=foursquare';
-        var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' +
-            log + ',' + lat + '&client_id=' + 'I35M5ZXXFUZTAMVQPV0BRTAC4O3PJ3NDVV4BHNID5Q2NDTLL' +
-            '&client_secret=' + 'LTUSTS3QA4ZGOSJGG0M35FIXK4LYXTGLL2UYAXWGEZC50RUT' + '&query=' + title +
-            '&v=20180325';
 
-        $.getJSON(foursquareURL).done(
-            function(data) {
-                var results = data.response.venues[0];
-                self.URL = results.url;
-                if (typeof self.URL === 'undefined') {
-                    self.URL = "";
-                }
-                self.street = results.location.formattedAddress[0];
-                self.city = results.location.formattedAddress[1];
-                self.phone = results.contact.phone;
-
-            }).fail(function() {
-            alert("There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.");
-        });
-
-        //     fetch(foursquareURL)
-        //         .then(response => response.json())
-        // .then(function(data) {
-        //             var results = data.response.venues[0];
-        //             self.URL = results.url;
-        //             if (typeof self.URL === 'undefined'){
-        //                 self.URL = "";
-        //             }
-        //             self.street = results.location.formattedAddress[0];
-        //             self.city = results.location.formattedAddress[1];
-        //             self.phone = results.contact.phone;
-        //             if (typeof self.phone === 'undefined'){
-        //                 self.phone = "";
-        //             } else {
-        //                 self.phone = formatPhone(self.phone);
-        //             }
-        //         })
-        //         .catch();
-// function addText(data) {
-//     var results = data.response.venues[0];
-//
-//     self.name = results.name;
-//     self.address = results.location.address;
-//     self.city = results.location.formattedAddress[1];
-//     self.phone = results.contact.phone;
-// }
         marker.content =self.name + self.address;
 
 
@@ -152,6 +99,9 @@ function init() {
         document.getElementById('show-listings').addEventListener('click', showListings);
         document.getElementById('hide-listings').addEventListener('click', hideListings);
     }
+
+
+
     document.getElementById('search').addEventListener('click', function () {
         goSearch();
     });
@@ -176,9 +126,58 @@ function init() {
 
     // 点击事件方法主体
     function markerClick(e) {
-        infoWindow.setContent(e.target.content);
-        infoWindow.open(map, e.target.getPosition());
+
+        // 先将 foursquareURL 必要的字段保存下来
+        var log = e.lnglat.lng,
+            lat = e.lnglat.lat,
+            title = this.F.title;
+
+        var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll=' +
+            lat + ',' + log + '&client_id=' + 'I35M5ZXXFUZTAMVQPV0BRTAC4O3PJ3NDVV4BHNID5Q2NDTLL' +
+            '&client_secret=' + 'LTUSTS3QA4ZGOSJGG0M35FIXK4LYXTGLL2UYAXWGEZC50RUT' + '&query=' + title +
+            '&v=20180325';
+
+        $.getJSON(foursquareURL).done(
+            function(data) {
+                var results = data.response.venues[0];
+                self.URL = results.url;
+                if (typeof self.URL === 'undefined') {
+                    self.URL = "";
+                }
+
+
+                infoWindow.setContent(`
+            <div>${results.name}</div>
+            <div>${results.location.formattedAddress.join()}</div>
+        `);
+                infoWindow.open(map, e.target.getPosition());
+            }).fail(function() {
+            alert("There was an error with the Foursquare API call. Please refresh the page and try again to load Foursquare data.");
+        });
     }
+    var viewModel = function () {
+        // 利用“原始数组” locations 初始化 observableArray
+        this.ways = ko.observableArray(locations);
+        this.aaa = ko.observableArray(markers);
+        // 用于列表条目的点击事件绑定
+        this.waysName = ko.observable("出行方式");
+
+        this.itemClick = function (e) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            marker.setMap(map);
+            map.setFitView();
+            markerClick( );
+        }
+
+        //绑定不了？？？
+        this.abx = ko.observable("From");
+        this.To = ko.observable("to");
+    }
+
+// 绑定 viewModel
+    ko.applyBindings(new viewModel());
 }
 
 
@@ -198,7 +197,6 @@ function hideListings() {
         markers[i].setMap(null);
     }
 }
-
 
 
 //查找路线方法主体
