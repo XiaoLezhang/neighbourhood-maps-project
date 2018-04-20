@@ -11,29 +11,28 @@
 </head>
 <body>
 <!-- 布局界面 -->
+
 <div class="container">
-    <div class="options-box">
+    <span style="font-size:30px;cursor:pointer;z-index: 1112" onclick="openNav()">&#9776; </span>
+    <div class="options-box" id="mySidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <h1>找到你心仪的景区</h1>
         <div>
-            <input id="show-listings" type="button" value="Show Listings">
-            <input id="hide-listings" type="button" value="Hide Listings">
+            <input id="show-listings"  type="button" value="Show Listings" data-bind="click:showListings">
+            <input id="hide-listings"  type="button" value="Hide Listings" data-bind="click:hideListings">
         </div>
+        <ul data-bind="foreach:ways">
+            <li><button data-bind="text:title,click:$parent.itemClick"></button></li>
+        </ul>
         <hr>
         <div>
-            <input id="zoom-to-area-text" type="text" placeholder="请输入关键字">
+            <input id="zoom-to-area-text" type="text" placeholder="请输入关键字" >
             <!--<input id="zoom-to-area-text" type="text" placeholder="请输入关键字">-->
             <input id="zoom-to-area" type="button" value="搜索">
         </div>
         <hr>
         <div>
-            <span class="text"> 出行方式 </span>
-            <p>
-                Your country:
-                <select data-bind="options: availableCountries,
-                       optionsText: 'countryName',
-                       value: selectedCountry,
-                       optionsCaption: 'Choose...'"></select>
-            </p>
+            <span class="text" data-bind="text:waysName"></span>
 
             <!--knockout 测试用-->
             <!--<select id="mode2" data-bind="options: ways,value:selected" ></select>-->
@@ -45,14 +44,15 @@
                 <option value="Transfer">公交</option>
             </select>
             <br>
-            <span class="text">From</span>
+            <span class="text" data-bind="text:abx"></span>
             <input id="origin" type="text" placeholder="起点">
             <br>
-            &nbsp&nbsp&nbsp&nbsp&nbsp<span class="text">to</span>
+            &nbsp&nbsp&nbsp&nbsp&nbsp<span class="text" data-bind="text:To"></span>
             <input id="destination" type="text" placeholder="目的地">
             <input id="search" type="button" value="Go">
         </div>
     </div>
+
     <div id="panel"></div>
     <!-- 选定地图的div容器 -->
     <div id="map">
@@ -60,6 +60,17 @@
     </div>
 </div>
 </body>
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.marginLeft = "0";
+        document.getElementById("map").style.marginLeft = "0";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.marginLeft = "-420px";
+        document.getElementById("map").style.marginLeft = "-320px";
+    }
+</script>
 <script type='text/javascript' src="JS/knockout-3.4.2.js"></script>
 <script src="http://webapi.amap.com/maps?v=1.4.4&key=a6c0816388386f78eb0621e836d9409b&callback=init"></script>
 
